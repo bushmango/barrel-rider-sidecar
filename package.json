@@ -5,7 +5,7 @@
   "main": "index.js",
   "license": "MIT",
   "bin": {
-    "barrel-rider": "./dist/index.js"
+    "barrel-rider-sidecar": "./dist/index.js"
   },
   "dependencies": {
     "@types/express": "4.17.6",
