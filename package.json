@@ -1,7 +1,7 @@
 {
   "name": "barrel-rider-sidecar",
   "description": "create index sidecar files for typescript",
-  "version": "1.0.23",
+  "version": "1.0.24",
   "main": "index.js",
   "license": "MIT",
   "bin": {
