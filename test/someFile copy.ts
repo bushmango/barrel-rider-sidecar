@@ -1,8 +1,6 @@
 import { anotherFile } from './subdir/anotherFile-sidecar'
 
-export const someFile2 = {
+export const someFile = {
   hello: 'world',
   aThing: anotherFile.something,
 }
-
-export const another = 'another'
