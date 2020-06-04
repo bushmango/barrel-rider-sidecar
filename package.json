@@ -1,7 +1,7 @@
 {
   "name": "barrel-rider-sidecar",
   "description": "create index sidecar files for typescript",
-  "version": "1.0.24",
+  "version": "1.1.0",
   "main": "index.js",
   "license": "MIT",
   "bin": {
@@ -28,6 +28,7 @@
   "scripts": {
     "start": "ts-node --project tsconfig.json index.ts",
     "dev": "ts-node-dev --project tsconfig.json index.ts",
+    "test": "yarn start -- --src test --watch --verbose --remove",
     "build": "tsc -p tsconfig.json"
   }
 }
