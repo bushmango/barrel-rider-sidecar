@@ -1,9 +1,6 @@
 #!/usr/bin/env node
-import * as bodyParser from 'body-parser'
 import * as commandLineArgs from 'command-line-args'
 import * as commandLineUsage from 'command-line-usage'
-import * as cors from 'cors'
-import * as express from 'express'
 import * as fs from 'fs'
 import { glob } from 'glob'
 import * as watch from 'glob-watcher'
@@ -124,9 +121,22 @@ async function run() {
   if (options.remove) {
     // Delete existing index.ts files
     console.log('deleting existing index files')
-    let files = await globAsync(options.src + '/**/*-sidecar.@(ts|tsx)')
-    for (let f of files) {
-      await removeIndexFile(f)
+
+    for (let i = 0; i < options.src.length; i++) {
+      let src = options.src[i]
+      let files = await globAsync(src + '/**/*-sidecar.@(ts|tsx)')
+      for (let f of files) {
+        let ext = path.extname(f)
+        let testFile =
+          f.substring(0, f.length - '-sidecar'.length - ext.length) + ext
+        if (!fs.existsSync(testFile)) {
+          await removeIndexFile(f)
+        }
+      }
+      files = await globAsync(src + '/**/*.sidecar.@(ts|tsx)')
+      for (let f of files) {
+        await removeIndexFile(f)
+      }
     }
   }
 
@@ -173,7 +183,7 @@ async function run() {
 
       let _toDelete = false
       let skip = false
-      if (f.endsWith('-sidecar.ts') || f.endsWith('-sidecar.tsx')) {
+      if (f.endsWith('-sidecar.ts') || f.endsWith('.sidecar.tsx')) {
         // Don't scan indexes
         _toDelete = true
       }
@@ -264,7 +274,7 @@ async function run() {
     }
 
     let regex = new RegExp(
-      `\\s*export\\s+(async\\s+)?(const|function|interface|type)\\s+(${escapeRegExp(
+      `\\s*export\\s+(async\\s+)?(const|function|interface|type|class)\\s+(${escapeRegExp(
         filename,
       )})(\\s|\\()`,
     )
@@ -316,13 +326,16 @@ async function run() {
   }
 
   function _watch() {
-    const app = express()
-    app.use(cors())
-    app.use(bodyParser.json())
+    console.log('watching')
 
-    const port = options.port || 5000
-    app.get('/', (req, res) => res.send('Barreler tool'))
-    app.listen(port, () => console.log(`Barreler listening on port ${port}!`))
+    // Keep alive
+    setInterval(() => {}, 1 << 30)
+    // if (process.stdin.isTTY) {
+    //   console.log('Press any key to exit')
+    //   process.stdin.setRawMode(true)
+    //   process.stdin.resume()
+    //   process.stdin.on('data', process.exit.bind(process, 0))
+    // }
   }
 
   if (options.watch) {
