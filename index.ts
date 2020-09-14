@@ -208,15 +208,16 @@ async function run() {
         let basename = path.basename(f)
         let last = basename.lastIndexOf('.')
         let filename = basename.substring(0, last)
+        let exportAs = filename.replace(/\./, '_')
 
-        if (doesFileHaveNamedExport(f, filename)) {
+        if (doesFileHaveNamedExport(f, exportAs)) {
           // Named exports
           _toDelete = true
           // lines.push(`export * from './${filename}'`)
         } else {
           // Group and re-export
-          lines.push(`import * as ${filename} from './${filename}'`)
-          lines.push(`export { ${filename} }`)
+          lines.push(`import * as ${exportAs} from './${filename}'`)
+          lines.push(`export { ${exportAs} }`)
         }
 
         // Write the file
