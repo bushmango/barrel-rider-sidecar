@@ -2,26 +2,73 @@
 
 Create Index Files for Typescript
 
+(This helps ensure that input names are consistent and makes it so you don't have to manually create barrel files or named export objects. This makes classless and functional programming smoother.)
+
 Based roughly on https://github.com/sw-yx/barrelbot
 
-HOW TO USE:
+## Usage
 
-Add a script to your package.json like this:
+Run against a source directory:
 
-"sidecar": "yarn barrel-rider-sidecar --watch --src src components lib",
+```bash
+yarn start --src src
+```
 
-Then add
+Watch mode:
 
-"&& yarn sidecar"
+```bash
+yarn start --watch --src src
+```
 
-to the end of your yarn start command, or however you start your application
+Multiple source roots are supported:
 
-VS CODE USERS: I recommend hiding sidecar files
+```bash
+yarn start --src src tools
+```
 
-https://stackoverflow.com/questions/30140112/how-do-i-hide-certain-files-from-the-sidebar-in-visual-studio-code
+View all available options:
 
-settings.json:
+```bash
+yarn start --help
+```
 
+## Behavior
+
+- Scans `.ts` and `.tsx` files and writes sibling `-sidecar.ts` files
+- Skips `index.*`, `.d.ts`, test files, files inside `node_modules`, and temporary `" copy"` files
+- Removes stale generated sidecars when `--remove` is provided
+- Removes sidecar files and exits without scanning when `--removeOnly` is provided
+- Leaves files alone when they begin with `// barrel-rider:ignore` or `// sidecar:ignore`
+
+## Testing
+
+Testing is manual, and also serves as examples of when the sidecar files are generated.
+
+Run the normal manual test flow with:
+
+```bash
+yarn test
+```
+
+This generates sidecar files in the `test` directory and then verifies:
+
+- every source file without `ignoreMe` in its name has a matching `-sidecar.ts`
+- every source file with `ignoreMe` in its name does not have a matching `-sidecar.ts`
+
+Reset the test environment and exercise the --removeOnly cleanup flow with:
+
+```bash
+yarn clean-test
+```
+
+This removes sidecar files from the `test` directory and then verifies that no generated `-sidecar` files remain.
+
+## VS Code
+
+You may want to hide generated sidecar files in your IDE. For VSCode:
+
+```json
 "files.exclude": {
-"\*_/_-sidecar.ts": true
-},
+  "**/*-sidecar.ts": true
+}
+```

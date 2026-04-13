@@ -1,1 +1,1 @@
-export const ignoreMoe = 'ignoreMe'
+export const ignoreMe = 'ignoreMe'

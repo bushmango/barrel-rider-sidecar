@@ -1,36 +1,38 @@
 {
-  "name": "barrel-rider-sidecar",
+  "name": "barrel-rider-sidecar2",
   "description": "create index sidecar files for typescript",
-  "version": "1.1.7",
-  "main": "index.js",
+  "version": "2.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "license": "MIT",
   "bin": {
-    "barrel-rider-sidecar": "./dist/index.js"
+    "barrel-rider-sidecar2": "dist/index.js"
   },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE.md"
+  ],
   "dependencies": {
-    "@types/express": "4.17.6",
-    "@types/lodash": "4.14.150",
-    "chokidar": "3.4.0",
+    "@parcel/watcher": "^2.5.1",
     "command-line-args": "^5.1.1",
     "command-line-usage": "6.1.0",
-    "cors": "^2.8.5",
-    "express": "4.17.1",
-    "glob": "7.1.6",
-    "glob-watcher": "^5.0.3",
-    "lodash": "4.17.15",
-    "normalize-path": "^3.0.0",
-    "sorted-json": "0.2.6",
-    "ts-node": "8.9.1",
-    "ts-node-dev": "^1.0.0-pre.32",
-    "typescript": "3.8.3"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.2"
   },
   "scripts": {
     "start": "ts-node --project tsconfig.json index.ts",
-    "dev": "ts-node-dev --project tsconfig.json index.ts",
-    "test": "yarn start -- --src test --watch --verbose --remove",
-    "build": "tsc -p tsconfig.json"
+    "dev": "ts-node --project tsconfig.json index.ts",
+    "test:verify": "ts-node --project tsconfig.json test_verify.ts after-test",
+    "clean-test:verify": "ts-node --project tsconfig.json test_verify.ts after-clean-test",
+    "test": "yarn start --src test --verbose --remove && yarn test:verify",
+    "clean-test": "yarn start --src test --verbose --removeOnly && yarn clean-test:verify",
+    "build": "tsc -p tsconfig.json",
+    "self-barrel": "ts-node --project tsconfig.json index.ts --src ./ --remove"
   },
   "devDependencies": {
-    "@types/node": "^12.20.55"
+    "@types/command-line-args": "^5.2.3",
+    "@types/command-line-usage": "^5.0.4",
+    "@types/node": "^22.19.17"
   }
 }

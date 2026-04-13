@@ -1,5 +1,11 @@
 node_modules
-dist
 buildcache
 
 yarn-error\.log
+
+
+# ignore test sidecars
+test/*-sidecar.ts
+
+# but re-include sidecar files in root
+!/*-sidecar.ts
